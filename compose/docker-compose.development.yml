@@ -1,0 +1,39 @@
+version: "3.5"
+
+services:
+  pod:
+    build:
+      context: ..
+      dockerfile: Aimrank.Pod/Dockerfile
+    restart: on-failure
+
+  web:
+    build:
+      context: ..
+      dockerfile: Aimrank.Web/Dockerfile
+    environment:
+      - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
+    volumes:
+      - ../src/Aimrank.Web.App/wwwroot:/home/app/wwwroot
+  
+  redis:
+    ports:
+      - 6379:6379
+
+  rabbitmq:
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  db:
+    environment:
+      - SA_PASSWORD=Secret123!
+      - ACCEPT_EULA=Y
+    ports:
+      - 1433:1433
+  
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025

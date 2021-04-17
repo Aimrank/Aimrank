@@ -1,0 +1,11 @@
+﻿version: "3.5"
+
+services:
+  web:
+    environment:
+      - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
+
+  db:
+    environment:
+      - SA_PASSWORD=Secret123!
+      - ACCEPT_EULA=Y
