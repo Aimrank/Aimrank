@@ -3,18 +3,19 @@ version: "3.5"
 services:
   pod:
     build:
-      context: ..
-      dockerfile: Aimrank.Pod/Dockerfile
-    restart: on-failure
+      context: ../Aimrank.Pod
+      dockerfile: Dockerfile
+    volumes:
+      - ../Aimrank.Pod/container_data:/home/steam/csgo
 
   web:
     build:
-      context: ..
-      dockerfile: Aimrank.Web/Dockerfile
+      context: ../Aimrank.Web
+      dockerfile: Dockerfile
     environment:
       - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
     volumes:
-      - ../src/Aimrank.Web.App/wwwroot:/home/app/wwwroot
+      - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
   
   redis:
     ports:

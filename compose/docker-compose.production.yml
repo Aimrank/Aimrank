@@ -1,6 +1,10 @@
 ﻿version: "3.5"
 
 services:
+  pod:
+    volumes:
+      - ../Aimrank.Pod/container_data:/home/steam/csgo
+    
   web:
     environment:
       - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
