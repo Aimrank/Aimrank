@@ -7,9 +7,9 @@ services:
     
   web:
     environment:
-      - ConnectionStrings__Database=Server=db;Database=Aimrank;User=sa;Password=Secret123!
+      - ConnectionStrings__Database=Host=db;Database=aimrank;Username=aimrank;Password=aimrank
 
   db:
     environment:
-      - SA_PASSWORD=Secret123!
-      - ACCEPT_EULA=Y
+      - POSTGRES_PASSWORD=aimrank
+      - POSTGRES_USER=aimrank
