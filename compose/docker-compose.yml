@@ -1,13 +1,16 @@
 version: "3.5"
 
 services:
+  cluster:
+    image: mariuszba/aimrank-cluster:latest
+
   pod:
     image: mariuszba/aimrank-pod:latest
     ports:
       - 27016-27019:27016-27019/udp
       - 27016-27019:27016-27019/tcp
     depends_on:
-      - web
+      - cluster
 
   web:
     image: mariuszba/aimrank-web:latest

@@ -1,6 +1,11 @@
 version: "3.5"
 
 services:
+  cluster:
+    build:
+      context: ../Aimrank.Cluster
+      dockerfile: Dockerfile
+
   pod:
     build:
       context: ../Aimrank.Pod
