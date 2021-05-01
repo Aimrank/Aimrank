@@ -6,6 +6,7 @@ Container project for all other services
 | :------ | :---------- |
 | [Aimrank.Pod](https://github.com/Aimrank/Aimrank.Pod) | ![Docker build status](https://github.com/Aimrank/Aimrank.Pod/workflows/Build/badge.svg) |
 | [Aimrank.Web](https://github.com/Aimrank/Aimrank.Web) | ![Docker build status](https://github.com/Aimrank/Aimrank.Web/workflows/Build/badge.svg) |
+| [Aimrank.Cluster](https://github.com/Aimrank/Aimrank.Cluster) | ![Docker build status](https://github.com/Aimrank/Aimrank.Cluster/workflows/Build/badge.svg) |
 
 ## Development
 

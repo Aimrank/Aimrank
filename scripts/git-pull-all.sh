@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORIES=(Aimrank.Pod Aimrank.Web)
+REPOSITORIES=(Aimrank.Pod Aimrank.Web Aimrank.Cluster)
 
 for REPOSITORY in ${REPOSITORIES[@]}
 do
