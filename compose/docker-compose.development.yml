@@ -17,8 +17,6 @@ services:
     build:
       context: ../Aimrank.Web
       dockerfile: Dockerfile
-    environment:
-      - ConnectionStrings__Database=Host=db;Database=aimrank;Username=aimrank;Password=aimrank
     volumes:
       - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
   
@@ -34,7 +32,6 @@ services:
   db:
     environment:
       - POSTGRES_PASSWORD=aimrank
-      - POSTGRES_USER=aimrank
     ports:
       - 5432:5432
   

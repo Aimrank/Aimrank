@@ -1,0 +1,5 @@
+CREATE USER aimrank WITH PASSWORD 'aimrank';
+CREATE DATABASE aimrank;
+CREATE DATABASE aimrank_cluster;
+GRANT ALL PRIVILEGES ON DATABASE aimrank TO aimrank;
+GRANT ALL PRIVILEGES ON DATABASE aimrank_cluster TO aimrank;

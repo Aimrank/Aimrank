@@ -3,6 +3,8 @@ version: "3.5"
 services:
   cluster:
     image: mariuszba/aimrank-cluster:latest
+    depends_on:
+      - db
 
   pod:
     image: mariuszba/aimrank-pod:latest
@@ -35,6 +37,7 @@ services:
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ../postgres:/docker-entrypoint-initdb.d
 
 volumes:
   postgres_data:

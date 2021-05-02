@@ -4,10 +4,6 @@ services:
   pod:
     volumes:
       - ../Aimrank.Pod/container_data:/home/steam/csgo
-    
-  web:
-    environment:
-      - ConnectionStrings__Database=Host=db;Database=aimrank;Username=aimrank;Password=aimrank
 
   db:
     environment:
