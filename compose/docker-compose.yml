@@ -2,12 +2,12 @@ version: "3.5"
 
 services:
   cluster:
-    image: mariuszba/aimrank-cluster:latest
+    image: ghcr.io/aimrank/aimrank-cluster:latest
     depends_on:
       - db
 
   pod:
-    image: mariuszba/aimrank-pod:latest
+    image: ghcr.io/aimrank/aimrank-pod:latest
     ports:
       - 27016-27019:27016-27019/udp
       - 27016-27019:27016-27019/tcp
@@ -15,7 +15,7 @@ services:
       - cluster
 
   web:
-    image: mariuszba/aimrank-web:latest
+    image: ghcr.io/aimrank/aimrank-web:latest
     ports:
       - 80:80
     depends_on:
