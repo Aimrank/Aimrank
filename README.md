@@ -21,3 +21,13 @@ Clone this repository first. Then go to root project directory and execute follo
 ```
 
 This will loop through all other repositories and clone them in current directory.
+
+## Admin
+
+In order to add user to admin role execute following command:
+
+```bash
+docker exec compose_db_1 psql aimrank aimrank -c "insert into users.users_roles (name, user_id) values ('Admin', (select id from users.users where username = 'username'));"
+```
+
+Make sure to pass correct username and container name.
