@@ -4,7 +4,10 @@ services:
   cluster:
     image: ghcr.io/aimrank/aimrank-cluster:latest
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   pod:
     image: ghcr.io/aimrank/aimrank-pod:latest
@@ -12,15 +15,20 @@ services:
       - 27016-27019:27016-27019/udp
       - 27016-27019:27016-27019/tcp
     depends_on:
-      - cluster
+      cluster:
+        condition: service_started
 
   web:
     image: ghcr.io/aimrank/aimrank-web:latest
     ports:
       - 80:80
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   redis:
     image: redis:6.0.10-alpine
@@ -29,15 +37,20 @@ services:
     image: rabbitmq:3.8.9-management
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
-      interval: 30s
-      timeout: 30s
-      retries: 5
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   db:
     image: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../postgres:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aimrank" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
