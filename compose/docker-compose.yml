@@ -20,8 +20,6 @@ services:
 
   web:
     image: ghcr.io/aimrank/aimrank-web:latest
-    ports:
-      - 80:80
     depends_on:
       db:
         condition: service_healthy

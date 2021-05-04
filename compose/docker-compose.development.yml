@@ -17,6 +17,8 @@ services:
     build:
       context: ../Aimrank.Web
       dockerfile: Dockerfile
+    ports:
+      - 80:80
     volumes:
       - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
   

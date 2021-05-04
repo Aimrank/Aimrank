@@ -1,11 +1,51 @@
 ﻿version: "3.5"
 
 services:
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../../certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      web:
+        condition: service_healthy
+      pod:
+        condition: service_healthy
+      cluster:
+        condition: service_healthy
+    restart: on-failure
+
   pod:
     volumes:
       - ../Aimrank.Pod/container_data:/home/steam/csgo
+    restart: on-failure
+        
+  web:
+    environment:
+      - UrlFactorySettings__BasePath=https://aimrank.pl
+      - UserAccessModuleSettings__EmailSettings__SenderName=Aimrank
+      - UserAccessModuleSettings__EmailSettings__SenderEmail=support@aimrank.pl
+      - UserAccessModuleSettings__EmailSettings__SmtpAddress=smtp.sendgrid.net
+      - UserAccessModuleSettings__EmailSettings__SmtpPort=465
+      - UserAccessModuleSettings__EmailSettings__UseSsl=true
+      - UserAccessModuleSettings__EmailSettings__UseAuthentication=true
+      - UserAccessModuleSettings__EmailSettings__AuthenticationUsername=${EMAIL_AUTH_USERNAME}
+      - UserAccessModuleSettings__EmailSettings__AuthenticationPassword=${EMAIL_AUTH_PASSWORD}
+    restart: on-failure
+        
+  cluster:
+    restart: on-failure
+
+  redis:
+    restart: on-failure
+        
+  rabbitmq:
+    restart: on-failure
 
   db:
     environment:
       - POSTGRES_PASSWORD=aimrank
-      - POSTGRES_USER=aimrank
+    restart: on-failure
