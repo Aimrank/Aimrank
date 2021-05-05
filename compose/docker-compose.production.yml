@@ -1,11 +1,50 @@
 ﻿version: "3.5"
 
 services:
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ../nginx/nginx.production.conf:/etc/nginx/nginx.conf
+      - ../../certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+
   pod:
     volumes:
       - ../Aimrank.Pod/container_data:/home/steam/csgo
+    expose:
+      - 80
+    restart: always
+        
+  web:
+    environment:
+      - UrlFactorySettings__BasePath=https://aimrank.pl
+      - UserAccessModuleSettings__EmailSettings__SenderName=Aimrank
+      - UserAccessModuleSettings__EmailSettings__SenderEmail=support@aimrank.pl
+      - UserAccessModuleSettings__EmailSettings__SmtpAddress=smtp.sendgrid.net
+      - UserAccessModuleSettings__EmailSettings__SmtpPort=465
+      - UserAccessModuleSettings__EmailSettings__UseSsl=true
+      - UserAccessModuleSettings__EmailSettings__UseAuthentication=true
+      - UserAccessModuleSettings__EmailSettings__AuthenticationUsername=${EMAIL_AUTH_USERNAME}
+      - UserAccessModuleSettings__EmailSettings__AuthenticationPassword=${EMAIL_AUTH_PASSWORD}
+    expose:
+      - 80
+    restart: always
+        
+  cluster:
+    expose:
+      - 80
+    restart: always
+
+  redis:
+    restart: always
+        
+  rabbitmq:
+    restart: always
 
   db:
     environment:
       - POSTGRES_PASSWORD=aimrank
-      - POSTGRES_USER=aimrank
+    restart: always

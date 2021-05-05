@@ -1,0 +1,35 @@
+name: Deploy
+
+on: [workflow_dispatch]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup SSH key
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_HOST > ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Add permissions to execute scripts
+        run: chmod -R +x scripts
+
+      - name: Deploy
+        shell: bash
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+          CR_USER: ${{ secrets.CR_USER }}
+          SSH_NAME: ${{ secrets.SSH_NAME }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: ./scripts/deployment/deploy.sh
