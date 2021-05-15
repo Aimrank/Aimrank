@@ -62,6 +62,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Cluster.Core", "Aim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Cluster.Infrastructure", "Aimrank.Cluster\src\Aimrank.Cluster.Infrastructure\Aimrank.Cluster.Infrastructure.csproj", "{438A5D02-CD6A-4296-B6F5-EB1954D18288}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{BBAE2883-62F8-4613-896A-B524756DF417}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Web.Database.Migrator", "Aimrank.Web\src\Database\Aimrank.Web.Database.Migrator\Aimrank.Web.Database.Migrator.csproj", "{70F5AE16-6FC2-487A-82A3-E97015654CA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aimrank.Cluster.Migrator", "Aimrank.Cluster\src\Aimrank.Cluster.Migrator\Aimrank.Cluster.Migrator.csproj", "{809FDD42-2DF7-4ADC-A44A-49C465031290}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +102,9 @@ Global
 		{E90E78D9-4EEC-442E-8335-E613C8C1D45B} = {F7E88B83-11D1-4A46-ADA6-2AC4804D6123}
 		{5D76EA32-FC83-49E6-8E99-394E397601C5} = {F7E88B83-11D1-4A46-ADA6-2AC4804D6123}
 		{438A5D02-CD6A-4296-B6F5-EB1954D18288} = {F7E88B83-11D1-4A46-ADA6-2AC4804D6123}
+		{BBAE2883-62F8-4613-896A-B524756DF417} = {EC385E65-5560-4142-AF0B-1ABE4808EC52}
+		{70F5AE16-6FC2-487A-82A3-E97015654CA5} = {BBAE2883-62F8-4613-896A-B524756DF417}
+		{809FDD42-2DF7-4ADC-A44A-49C465031290} = {F7E88B83-11D1-4A46-ADA6-2AC4804D6123}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{16F71CF2-7A55-4A22-A74B-E1471EFF9BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -182,5 +191,13 @@ Global
 		{438A5D02-CD6A-4296-B6F5-EB1954D18288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{438A5D02-CD6A-4296-B6F5-EB1954D18288}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{438A5D02-CD6A-4296-B6F5-EB1954D18288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F5AE16-6FC2-487A-82A3-E97015654CA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F5AE16-6FC2-487A-82A3-E97015654CA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F5AE16-6FC2-487A-82A3-E97015654CA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F5AE16-6FC2-487A-82A3-E97015654CA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{809FDD42-2DF7-4ADC-A44A-49C465031290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{809FDD42-2DF7-4ADC-A44A-49C465031290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{809FDD42-2DF7-4ADC-A44A-49C465031290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{809FDD42-2DF7-4ADC-A44A-49C465031290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

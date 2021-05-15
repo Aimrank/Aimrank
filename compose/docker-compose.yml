@@ -8,6 +8,7 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    command: [ "sh", "-c", "dotnet Aimrank.Cluster.Migrator.dll && dotnet Aimrank.Cluster.Api.dll" ]
 
   pod:
     image: ghcr.io/aimrank/aimrank-pod:latest
@@ -27,6 +28,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    command: [ "sh", "-c", "dotnet Aimrank.Web.Database.Migrator.dll && dotnet Aimrank.Web.App.dll" ]
 
   redis:
     image: redis:6.0.10-alpine
