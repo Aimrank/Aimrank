@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Release.Name }}-letsencrypt-{{ .Values.issuer.env }}
+spec:
+  acme:
+    server: https://acme-{{ if ne .Values.issuer.env "prod" }}staging-{{ end }}v02.api.letsencrypt.org/directory
+    {{- if eq .Values.issuer.env "prod" }}
+    email: {{ .Values.issuer.prod.email }}
+    {{- else }}
+    email: {{ .Values.issuer.staging.email }}
+    {{- end }}
+    privateKeySecretRef:
+      name: {{ .Release.Name }}-letsencrypt-{{ .Values.issuer.env }}
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

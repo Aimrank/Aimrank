@@ -10,5 +10,6 @@ do
   cd $REPOSITORY
   git checkout master
   git pull
+  git checkout -
   cd ..
 done

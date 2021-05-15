@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank-pod.fullname" . }}
+  labels: {{ include "aimrank-pod.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank-pod.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank-pod.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+      - name: wait-for-rabbitmq
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["service", "{{ include "aimrank-pod.rabbitmq" . }}"]
+      - name: wait-for-cluster
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["service", "{{ include "aimrank-pod.cluster" . }}"]
+      containers:
+      - name: aimrank-pod
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: RabbitMQSettings__HostName
+          value: {{ include "aimrank-pod.rabbitmq" . }}
+        - name: PodSettings__HostName
+          value: {{ include "aimrank-pod.fullname" . }}
+        - name: PodSettings__ClusterAddress
+          value: "http://{{ include "aimrank-pod.cluster" . }}"
+        volumeMounts:
+        - name: {{ include "aimrank-pod.fullname" . }}-csgo-storage
+          mountPath: /home/steam/csgo
+        ports:
+        - containerPort: 80
+        {{- range .Values.csgoPorts }}
+        - containerPort: {{ . }}
+          protocol: TCP
+        - containerPort: {{ . }}
+          protocol: UDP
+        {{- end }}
+      volumes:
+      - name: {{ include "aimrank-pod.fullname" . }}-csgo-storage
+        hostPath:
+          path: {{ .Values.volumes.csgo }}
+          type: DirectoryOrCreate
+      nodeSelector: {{ .Values.nodeSelector | toYaml | nindent 8 }}

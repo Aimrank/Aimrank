@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank.redis" . }}
+  labels: {{ include "aimrank.redis.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank.redis.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank.redis.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+        ports:
+        - containerPort: 6379
+      nodeSelector: {{ .Values.redis.nodeSelector | toYaml | nindent 8 }}

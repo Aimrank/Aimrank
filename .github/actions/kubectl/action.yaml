@@ -1,0 +1,15 @@
+name: kubectl
+description: |
+  Create bash aliases for kubectl and helm commands that are executed
+  in docker containers. Action expects KUBECONFIG_FILE environment variable
+  to contain base64 encoded content of kubeconfig file. This file is used by
+  kubectl and helm to authenticate to the cluster.
+runs:
+  using: "composite"
+  steps:
+  - name: Configure kubectl and helm
+    shell: bash
+    run: |
+      mkdir ~/.kube && echo $KUBECONFIG_FILE | base64 -d > ~/.kube/config
+      alias kubectl="docker run -it --rm -v ~/.kube/config:/.kube/config bitnami/kubectl"
+      alias helm="docker run -it --rm -v ~/.kube:/root/.kube alpine/helm"

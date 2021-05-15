@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank-web.fullname" . }}
+  labels: {{ include "aimrank-web.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{ include "aimrank-web.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank-web.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+      - name: wait-for-migration
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["job", "{{ include "aimrank-web.migrator" . }}"]
+      - name: wait-for-rabbitmq
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["service", "{{ include "aimrank-web.rabbitmq" . }}"]
+      - name: wait-for-redis
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["service", "{{ include "aimrank-web.redis" . }}"]
+      containers:
+      - name: aimrank-web
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: ConnectionStrings__Database
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank-web.fullname" . }}-secret
+              key: connectionString
+        - name: UrlFactorySettings__BasePath
+          value: {{ .Values.host }}
+        - name: RedisSettings__Endpoint
+          value: {{ include "aimrank-web.redis" . }}
+        - name: RabbitMQSettings__HostName
+          value: {{ include "aimrank-web.rabbitmq" . }}
+        - name: ClusterSettings__HostName
+          value: "http://{{ include "aimrank-web.cluster" . }}"
+        - name: MatchesModuleSettings__RedisSettings__Endpoint
+          value: {{ include "aimrank-web.redis" . }}
+        - name: UserAccessModuleSettings__EmailSettings__SmtpAddress
+          value: "smtp.sendgrid.net"
+        - name: UserAccessModuleSettings__EmailSettings__SmtpPort
+          value: "465"
+        - name: UserAccessModuleSettings__EmailSettings__UseSsl
+          value: "true"
+        - name: UserAccessModuleSettings__EmailSettings__UseAuthentication
+          value: "true"
+        - name: UserAccessModuleSettings__EmailSettings__AuthenticationUsername
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank-web.fullname" . }}-secret
+              key: emailUsername
+        - name: UserAccessModuleSettings__EmailSettings__AuthenticationPassword
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank-web.fullname" . }}-secret
+              key: emailPassword
+        ports:
+        - containerPort: 80
+  

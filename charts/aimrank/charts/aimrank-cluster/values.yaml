@@ -1,0 +1,9 @@
+image:
+  repository: ghcr.io/aimrank/aimrank-cluster
+  tag: latest
+  pullPolicy: Always
+
+postgres:
+  database: aimrank_cluster
+  username: aimrank
+  password: YWltcmFuaw==

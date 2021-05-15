@@ -1,0 +1,17 @@
+host: https://aimrank.pl
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/aimrank/aimrank-web
+  tag: latest
+  pullPolicy: Always
+
+emailService:
+  username: YWltcmFuaw==
+  password: YWltcmFuaw==
+
+postgres:
+  database: aimrank
+  username: aimrank
+  password: YWltcmFuaw==

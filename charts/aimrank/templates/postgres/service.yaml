@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aimrank.postgres" . }}
+spec:
+  selector: {{ include "aimrank.postgres.labels" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: 5432

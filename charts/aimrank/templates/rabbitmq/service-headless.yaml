@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aimrank.rabbitmq.headless" . }}
+spec:
+  clusterIP: None
+  selector: {{ include "aimrank.rabbitmq.labels" . | nindent 4 }}
+  ports:
+  - name: epmd
+    port: 4369
+    protocol: TCP
+  - name: cluster-rpc
+    port: 25672
+    protocol: TCP

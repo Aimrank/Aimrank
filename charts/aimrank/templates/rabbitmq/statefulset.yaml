@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "aimrank.rabbitmq" . }}
+  labels: {{ include "aimrank.rabbitmq.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank.rabbitmq.labels" . | nindent 6 }}
+  serviceName: {{ include "aimrank.rabbitmq.headless" . }}
+  template:
+    metadata:
+      labels: {{ include "aimrank.rabbitmq.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsGroup: 999
+      volumes:
+      - name: rabbitmq-data
+        hostPath:
+          path: {{ .Values.rabbitmq.volume.hostPath }}
+      containers:
+      - name: rabbitmq
+        image: {{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}
+        imagePullPolicy: {{ .Values.rabbitmq.image.pullPolicy }}
+        volumeMounts:
+        - name: rabbitmq-data
+          mountPath: /var/lib/rabbitmq/mnesia
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank.rabbitmq" . }}
+              key: user
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank.rabbitmq" . }}
+              key: pass
+        ports:
+        - name: amqp
+          containerPort: 5672
+          protocol: TCP
+        - name: management
+          containerPort: 15672
+          protocol: TCP
+        - name: prometheus
+          containerPort: 15692
+          protocol: TCP
+        - name: epmd
+          containerPort: 4369
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command: ["rabbitmq-diagnostics", "status"]
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 15
+        readinessProbe:
+          exec:
+            command: ["rabbitmq-diagnostics", "ping"]
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 10
+      nodeSelector: {{ .Values.rabbitmq.nodeSelector | toYaml | nindent 8 }}

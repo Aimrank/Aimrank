@@ -1,0 +1,43 @@
+postgres:
+  image:
+    repository: postgres
+    tag: "13.3"
+    pullPolicy: IfNotPresent
+  volume:
+    hostPath: /opt/aimrank/db
+  nodeSelector:
+    storage: enabled
+  credentials:
+    username: aimrank
+    password: YWltcmFuaw==
+
+rabbitmq:
+  image:
+    repository: rabbitmq
+    tag: "3.8-management"
+    pullPolicy: IfNotPresent
+  volume:
+    hostPath: /opt/aimrank/rabbitmq
+  nodeSelector:
+    storage: enabled
+  credentials:
+    username: Z3Vlc3Q=
+    password: Z3Vlc3Q=
+
+redis:
+  image:
+    repository: redis
+    tag: "6.2-alpine"
+    pullPolicy: IfNotPresent
+  nodeSelector:
+    storage: enabled
+
+ingress:
+  host: aimrank.pl
+
+issuer:
+  env: prod
+  staging:
+    email: example@mail.com
+  prod:
+    email: example@mail.com

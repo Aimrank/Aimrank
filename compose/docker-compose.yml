@@ -1,8 +1,19 @@
 version: "3.5"
 
 services:
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    restart: always
+    
   cluster:
-    image: ghcr.io/aimrank/aimrank-cluster:latest
+    image: ghcr.io/aimrank/aimrank-cluster:local
+    build:
+      context: ../Aimrank.Cluster
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
@@ -11,16 +22,26 @@ services:
     command: [ "sh", "-c", "dotnet Aimrank.Cluster.Migrator.dll && dotnet Aimrank.Cluster.Api.dll" ]
 
   pod:
-    image: ghcr.io/aimrank/aimrank-pod:latest
+    image: ghcr.io/aimrank/aimrank-pod:local
+    build:
+      context: ../Aimrank.Pod
+      dockerfile: Dockerfile
     ports:
-      - 27016-27019:27016-27019/udp
-      - 27016-27019:27016-27019/tcp
+      - 30001-30004:30001-30004/udp
+      - 30001-30004:30001-30004/tcp
+    volumes:
+      - ../Aimrank.Pod/container_data:/home/steam/csgo
     depends_on:
       cluster:
         condition: service_started
 
   web:
-    image: ghcr.io/aimrank/aimrank-web:latest
+    image: ghcr.io/aimrank/aimrank-web:local
+    build:
+      context: ../Aimrank.Web
+      dockerfile: Dockerfile
+    volumes:
+      - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
     depends_on:
       db:
         condition: service_healthy
@@ -32,9 +53,14 @@ services:
 
   redis:
     image: redis:6.0.10-alpine
+    ports:
+      - 6379:6379
 
   rabbitmq:
     image: rabbitmq:3.8.9-management
+    ports:
+      - 5672:5672
+      - 15672:15672
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
       interval: 5s
@@ -43,6 +69,10 @@ services:
 
   db:
     image: postgres
+    environment:
+      - POSTGRES_PASSWORD=aimrank
+    ports:
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../postgres:/docker-entrypoint-initdb.d
@@ -51,6 +81,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+      
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
 
 volumes:
   postgres_data:

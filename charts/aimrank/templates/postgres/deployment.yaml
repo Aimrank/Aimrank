@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank.postgres" . }}
+  labels: {{ include "aimrank.postgres.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank.postgres.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank.postgres.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}
+        imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank.postgres" . }}
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank.postgres" . }}
+              key: password
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        startupProbe:
+          exec:
+            command: ["pg_isready"]
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 10
+      volumes:
+      - name: postgres-data
+        hostPath:
+          path: {{ .Values.postgres.volume.hostPath }}
+          type: DirectoryOrCreate
+      nodeSelector: {{ .Values.postgres.nodeSelector | toYaml | nindent 8 }}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aimrank.redis" . }}
+spec:
+  selector: {{ include "aimrank.redis.labels" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: 6379
