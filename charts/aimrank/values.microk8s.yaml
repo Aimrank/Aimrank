@@ -1,0 +1,50 @@
+postgres:
+  volume:
+    hostPath: ~/Projects/Aimrank/.volume/postgres
+  nodeSelector:
+    storage: enabled
+
+rabbitmq:
+  volume:
+    hostPath: ~/Projects/Aimrank/.volume/rabbitmq
+  nodeSelector:
+    storage: enabled
+
+redis:
+  nodeSelector:
+    storage: enabled
+
+mailhog:
+  enabled: true
+
+# Override values for subcharts
+
+aimrank-agones:
+  image:
+    repository: localhost:32000/aimrank-agones
+    tag: local
+  volume:
+    csgo: ~/Projects/Aimrank/Aimrank.Agones/container_data
+  nodeSelector:
+    storage: enabled
+
+aimrank-agones-cluster:
+  image:
+    repository: localhost:32000/aimrank-agones-cluster
+    tag: local
+
+aimrank-web:
+  host: http://localhost
+  image:
+    repository: localhost:32000/aimrank-web
+    tag: local
+  emailService:
+    enabled: false
+    smtpAddress: aimrank-master-mailhog
+    smtpPort: 1025
+
+ingress:
+  enabled: false
+
+issuer:
+  enabled: false

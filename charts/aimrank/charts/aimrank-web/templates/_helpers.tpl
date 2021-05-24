@@ -29,5 +29,5 @@ app.kubernetes.io/instance: {{ include "aimrank-web.fullname" . }}
 {{- end }}
 
 {{- define "aimrank-web.cluster" -}}
-{{- printf "%s-%s" .Release.Name "aimrank-cluster" | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" .Release.Name "aimrank-agones-cluster" | trunc 63 | trimSuffix "-" }}
 {{- end }}

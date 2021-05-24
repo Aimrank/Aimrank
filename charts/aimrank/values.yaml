@@ -32,10 +32,19 @@ redis:
   nodeSelector:
     storage: enabled
 
+mailhog:
+  enabled: false
+  image:
+    repository: mailhog/mailhog
+    tag: latest
+    pullPolicy: IfNotPresent
+
 ingress:
+  enabled: true
   host: aimrank.pl
 
 issuer:
+  enabled: true
   env: prod
   staging:
     email: example@mail.com

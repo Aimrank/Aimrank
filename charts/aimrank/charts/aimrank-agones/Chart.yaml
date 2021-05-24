@@ -1,0 +1,5 @@
+apiVersion: v2
+name: aimrank-agones
+description: Agones CS:GO servers fleet
+type: application
+version: 0.1.0

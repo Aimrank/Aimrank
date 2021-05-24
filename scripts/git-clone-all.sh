@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GITHUB_URL=git@github.com:Aimrank
-REPOSITORIES=(Aimrank.Pod Aimrank.Web Aimrank.Cluster)
+REPOSITORIES=(Aimrank.Web Aimrank.Agones Aimrank.Agones.Cluster)
 
 for REPOSITORY in ${REPOSITORIES[@]}
 do

@@ -8,6 +8,9 @@ image:
   pullPolicy: Always
 
 emailService:
+  enabled: true
+  smtpAddress: smtp.sendgrid.net
+  smtpPort: 465
   username: YWltcmFuaw==
   password: YWltcmFuaw==
 
