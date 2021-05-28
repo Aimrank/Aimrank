@@ -6,6 +6,7 @@ AIMRANK_WEB=localhost:32000/aimrank-web:local
 AIMRANK_AGONES=localhost:32000/aimrank-agones:local
 AIMRANK_AGONES_CLUSTER=localhost:32000/aimrank-agones-cluster:local
 
-cd Aimrank.Web && docker build -t $AIMRANK_WEB . && docker push $AIMRANK_WEB && cd ..
-cd Aimrank.Agones && docker build -t $AIMRANK_AGONES . && docker push $AIMRANK_AGONES && cd ..
-cd Aimrank.Agones.Cluster && docker build -t $AIMRANK_AGONES_CLUSTER . && docker push $AIMRANK_AGONES_CLUSTER && cd ..
+docker build -t $AIMRANK_WEB ./Aimrank.Web && docker push $AIMRANK_WEB
+docker build -t $AIMRANK_AGONES ./Aimrank.Agones && docker push $AIMRANK_AGONES
+docker build -t $AIMRANK_AGONES_CLUSTER ./Aimrank.Agones.Cluster && docker push $AIMRANK_AGONES_CLUSTER
+
