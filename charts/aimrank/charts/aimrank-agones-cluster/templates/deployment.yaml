@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank-agones-cluster.fullname" . }}
+  labels: {{ include "aimrank-agones-cluster.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank-agones-cluster.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank-agones-cluster.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+      - name: wait-for-migration
+        image: groundnuty/k8s-wait-for:v1.4
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["job", "{{ include "aimrank-agones-cluster.migrator" . }}"]
+      containers:
+      - name: aimrank-agones-cluster
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: ConnectionStrings__Database
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "aimrank-agones-cluster.fullname" . }}-secret
+              key: connectionString
+        - name: FleetSettings__Namespace
+          value: {{ .Release.Namespace }}
+        - name: FleetSettings__FleetName
+          value: {{ .Release.Name }}-aimrank-agones
+        ports:
+        - containerPort: 80

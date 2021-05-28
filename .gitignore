@@ -1,6 +1,9 @@
 .vs
 .idea
+.volume
 
+Aimrank.Agones
+Aimrank.Agones.Cluster
 Aimrank.Cluster
 Aimrank.Pod
 Aimrank.Web

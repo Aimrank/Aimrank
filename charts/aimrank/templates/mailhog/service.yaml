@@ -1,0 +1,15 @@
+{{- if .Values.mailhog.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aimrank.mailhog" . }}
+spec:
+  selector: {{ include "aimrank.mailhog.labels" . | nindent 4 }}
+  ports:
+  - name: smtp
+    port: 1025
+    protocol: TCP
+  - name: client
+    port: 8025
+    protocol: TCP
+{{- end }}

@@ -41,13 +41,14 @@ spec:
         - name: RabbitMQSettings__HostName
           value: {{ include "aimrank-web.rabbitmq" . }}
         - name: ClusterSettings__HostName
-          value: "http://{{ include "aimrank-web.cluster" . }}"
+          value: {{ include "aimrank-web.cluster" . }}
         - name: MatchesModuleSettings__RedisSettings__Endpoint
           value: {{ include "aimrank-web.redis" . }}
         - name: UserAccessModuleSettings__EmailSettings__SmtpAddress
-          value: "smtp.sendgrid.net"
+          value: {{ .Values.emailService.smtpAddress | quote }}
         - name: UserAccessModuleSettings__EmailSettings__SmtpPort
-          value: "465"
+          value: {{ .Values.emailService.smtpPort | quote }}
+        {{- if .Values.emailService.enabled }}
         - name: UserAccessModuleSettings__EmailSettings__UseSsl
           value: "true"
         - name: UserAccessModuleSettings__EmailSettings__UseAuthentication
@@ -62,6 +63,7 @@ spec:
             secretKeyRef:
               name: {{ include "aimrank-web.fullname" . }}-secret
               key: emailPassword
+        {{- end }}
         ports:
         - containerPort: 80
   

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "aimrank-cluster.migrator" . }}
+  name: {{ include "aimrank-agones-cluster.migrator" . }}
 spec:
   backoffLimit: 1
   template:
@@ -10,7 +10,7 @@ spec:
       - name: wait-for-postgres
         image: groundnuty/k8s-wait-for:v1.4
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args: ["service", "{{ template "aimrank-cluster.postgres" . }}"]
+        args: ["service", "{{ template "aimrank-agones-cluster.postgres" . }}"]
       containers:
       - name: migrator
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -19,7 +19,7 @@ spec:
         - name: ConnectionStrings__Database
           valueFrom:
             secretKeyRef:
-              name: {{ include "aimrank-cluster.fullname" . }}-secret
+              name: {{ include "aimrank-agones-cluster.fullname" . }}-secret
               key: connectionString
-        command: ["dotnet", "Aimrank.Cluster.Migrator.dll"]
+        command: ["dotnet", "Aimrank.Agones.Cluster.Migrator.dll"]
       restartPolicy: Never

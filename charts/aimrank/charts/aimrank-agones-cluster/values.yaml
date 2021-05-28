@@ -1,5 +1,5 @@
 image:
-  repository: ghcr.io/aimrank/aimrank-cluster
+  repository: ghcr.io/aimrank/aimrank-agones-cluster
   tag: latest
   pullPolicy: Always
 

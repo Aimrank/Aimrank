@@ -18,7 +18,7 @@ jobs:
           EMAIL_SERVICE_USERNAME: ${{ secrets.EMAIL_SERVICE_USERNAME }}
           EMAIL_SERVICE_PASSWORD: ${{ secrets.EMAIL_SERVICE_PASSWORD }}
         run: |
-          helm upgrade aimrank-live ./charts/aimrank \
+          helm upgrade aimrank-master ./charts/aimrank \
             --install \
             --namespace aimrank \
             --set aimrank-web.emailService.username=$EMAIL_SERVICE_USERNAME \

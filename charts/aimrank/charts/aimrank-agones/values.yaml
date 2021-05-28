@@ -1,0 +1,20 @@
+replicas: 0
+
+image:
+  repository: ghcr.io/aimrank/aimrank-agones
+  tag: latest
+  pullPolicy: Always
+
+volume:
+  csgo: /opt/aimrank/csgo
+
+nodeSelector:
+  storage: enabled
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "750m"
+  limits:
+    memory: "512Mi"
+    cpu: "750m"

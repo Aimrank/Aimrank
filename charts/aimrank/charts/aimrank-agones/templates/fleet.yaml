@@ -1,0 +1,43 @@
+apiVersion: agones.dev/v1
+kind: Fleet
+metadata:
+  name: {{ include "aimrank-agones.fullname" . }}
+  labels: {{ include "aimrank-agones.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        game: csgo
+    spec:
+      ports:
+      - name: srcds
+        protocol: TCPUDP
+        portPolicy: Dynamic
+        containerPort: 27016
+      health:
+        disabled: true
+      template:
+        spec:
+          initContainers:
+          - name: wait-for-cluster
+            image: groundnuty/k8s-wait-for:v1.4
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args: ["service", "{{ include "aimrank-agones.cluster" . }}"]
+          volumes:
+          - name: csgo-data
+            hostPath:
+              path: {{ .Values.volume.csgo }}
+          containers:
+          - name: aimrank-agones
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            volumeMounts:
+            - name: csgo-data
+              mountPath: /home/steam/csgo
+            resources: {{ .Values.resources | toYaml | nindent 14 }}
+            env:
+            - name: ClusterSettings__HostName
+              value: {{ include "aimrank-agones.cluster" . }}
+            - name: RabbitMQSettings__HostName
+              value: {{ include "aimrank-agones.rabbitmq" . }}

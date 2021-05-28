@@ -1,0 +1,24 @@
+{{- if .Values.mailhog.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank.mailhog" . }}
+  labels: {{ include "aimrank.mailhog.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank.mailhog.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank.mailhog.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: mailhog
+        image: {{ .Values.mailhog.image.repository }}:{{ .Values.mailhog.image.tag }}
+        imagePullPolicy: {{ .Values.mailhog.image.pullPolicy }}
+        ports:
+        - name: smtp
+          containerPort: 1025
+        - name: client
+          containerPort: 8025
+{{- end }}
