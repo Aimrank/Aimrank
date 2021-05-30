@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
     depends_on:
       db:
         condition: service_healthy
