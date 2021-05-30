@@ -34,7 +34,7 @@ aimrank-agones-cluster:
     tag: local
 
 aimrank-web:
-  host: http://localhost
+  host: https://localhost
   image:
     repository: localhost:32000/aimrank-web
     tag: local
@@ -48,3 +48,6 @@ ingress:
 
 issuer:
   enabled: false
+
+nginx:
+  enabled: true

@@ -5,36 +5,12 @@ services:
     image: nginx:1.19
     volumes:
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../nginx/certs:/etc/nginx/certs
     ports:
       - 80:80
+      - 443:443
     restart: always
     
-  cluster:
-    image: ghcr.io/aimrank/aimrank-cluster:local
-    build:
-      context: ../Aimrank.Cluster
-      dockerfile: Dockerfile
-    depends_on:
-      db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    command: [ "sh", "-c", "dotnet Aimrank.Cluster.Migrator.dll && dotnet Aimrank.Cluster.Api.dll" ]
-
-  pod:
-    image: ghcr.io/aimrank/aimrank-pod:local
-    build:
-      context: ../Aimrank.Pod
-      dockerfile: Dockerfile
-    ports:
-      - 30001-30004:30001-30004/udp
-      - 30001-30004:30001-30004/tcp
-    volumes:
-      - ../Aimrank.Pod/container_data:/home/steam/csgo
-    depends_on:
-      cluster:
-        condition: service_started
-
   web:
     image: ghcr.io/aimrank/aimrank-web:local
     build:
@@ -42,6 +18,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../Aimrank.Web/src/Aimrank.Web.App/wwwroot:/app/wwwroot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
     depends_on:
       db:
         condition: service_healthy

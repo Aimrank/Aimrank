@@ -1,0 +1,44 @@
+{{- if .Values.nginx.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aimrank.nginx" . }}
+  labels: {{ include "aimrank.nginx.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "aimrank.nginx.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "aimrank.nginx.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}
+        imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        volumeMounts:
+        - name: nginx-certs
+          mountPath: /etc/nginx/certs
+        - name: nginx-config
+          mountPath: /etc/nginx
+      volumes:
+      - name: nginx-certs
+        configMap:
+          name: {{ include "aimrank.nginx" . }}
+          items:
+          - key: aimrank.crt
+            path: aimrank.crt
+          - key: aimrank.key
+            path: aimrank.key
+      - name: nginx-config
+        configMap:
+          name: {{ include "aimrank.nginx" . }}
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+{{- end }}

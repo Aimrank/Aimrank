@@ -1,0 +1,15 @@
+{{- if .Values.nginx.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aimrank.nginx" . }}
+spec:
+  selector: {{ include "aimrank.nginx.labels" . | nindent 4 }}
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    protocol: TCP
+{{- end }}
