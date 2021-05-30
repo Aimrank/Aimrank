@@ -50,3 +50,10 @@ issuer:
     email: example@mail.com
   prod:
     email: example@mail.com
+
+nginx:
+  enabled: false
+  image:
+    repository: nginx
+    tag: "1.19"
+    pullPolicy: IfNotPresent
