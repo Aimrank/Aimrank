@@ -19,6 +19,7 @@ spec:
         disabled: true
       template:
         spec:
+          serviceAccountName: default
           initContainers:
           - name: wait-for-cluster
             image: groundnuty/k8s-wait-for:v1.4
