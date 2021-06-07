@@ -10,11 +10,14 @@ Container project for all other services
 
 ## About
 
-Aimrank is a website that let's you play competitive CS:GO matches on aim maps.
+[Aimrank](https://aimrank.pl) is a website that let's you play competitive CS:GO matches on aim maps.
 You pick maps that you want to play and based on match configuration you can play 1 vs 1 or 2 vs 2.
 All statistics from games are tracked and after each match players rating is adjusted.
 Aimrank automatically pairs you with other players with similar rating, configures and starts CS:GO server.
 Then players are given server ip address and can connect from the in-game console.
+
+> ⚠️ Currently the live version does not work correctly due to graphql websocket connections being
+> not handled by nginx ingress. This works fine with microk8s but live cluster somehow refuses to work.
 
 ## Clone all repositories
 
